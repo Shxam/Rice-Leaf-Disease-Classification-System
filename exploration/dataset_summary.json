@@ -1,0 +1,108 @@
+{
+  "Train": {
+    "Bacterial Blight": {
+      "Lab": 834,
+      "Field": 371,
+      "total": 1205
+    },
+    "Brown Spot": {
+      "Lab": 313,
+      "Field": 637,
+      "total": 950
+    },
+    "Healthy": {
+      "Lab": 1039,
+      "Field": 175,
+      "total": 1214
+    },
+    "Leaf Blast": {
+      "Lab": 175,
+      "Field": 700,
+      "total": 875
+    },
+    "Leaf Smut": {
+      "Lab": 53,
+      "Field": 77,
+      "total": 130
+    },
+    "Tungro": {
+      "Lab": 342,
+      "Field": 571,
+      "total": 913
+    }
+  },
+  "Valid": {
+    "Bacterial Blight": {
+      "Lab": 179,
+      "Field": 80,
+      "total": 259
+    },
+    "Brown Spot": {
+      "Lab": 67,
+      "Field": 137,
+      "total": 204
+    },
+    "Healthy": {
+      "Lab": 223,
+      "Field": 37,
+      "total": 260
+    },
+    "Leaf Blast": {
+      "Lab": 38,
+      "Field": 150,
+      "total": 188
+    },
+    "Leaf Smut": {
+      "Lab": 11,
+      "Field": 17,
+      "total": 28
+    },
+    "Tungro": {
+      "Lab": 73,
+      "Field": 123,
+      "total": 196
+    }
+  },
+  "Test": {
+    "Bacterial Blight": {
+      "Lab": 179,
+      "Field": 80,
+      "total": 259
+    },
+    "Brown Spot": {
+      "Lab": 68,
+      "Field": 137,
+      "total": 205
+    },
+    "Healthy": {
+      "Lab": 223,
+      "Field": 40,
+      "total": 263
+    },
+    "Leaf Blast": {
+      "Lab": 38,
+      "Field": 150,
+      "total": 188
+    },
+    "Leaf Smut": {
+      "Lab": 12,
+      "Field": 17,
+      "total": 29
+    },
+    "Tungro": {
+      "Lab": 74,
+      "Field": 123,
+      "total": 197
+    }
+  },
+  "_analysis": {
+    "imbalance_ratio": 9.338461538461539,
+    "max_class": "Healthy",
+    "min_class": "Leaf Smut",
+    "total_images": {
+      "Train": 5287,
+      "Valid": 1135,
+      "Test": 1141
+    }
+  }
+}

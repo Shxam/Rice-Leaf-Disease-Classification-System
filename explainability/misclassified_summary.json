@@ -1,0 +1,79 @@
+[
+  {
+    "true": "Brown Spot",
+    "pred": "Bacterial Blight",
+    "env": "Field",
+    "pred_conf": 0.8834,
+    "true_conf": 0.0092
+  },
+  {
+    "true": "Brown Spot",
+    "pred": "Leaf Smut",
+    "env": "Lab",
+    "pred_conf": 0.8502,
+    "true_conf": 0.1227
+  },
+  {
+    "true": "Brown Spot",
+    "pred": "Tungro",
+    "env": "Lab",
+    "pred_conf": 0.7174,
+    "true_conf": 0.0647
+  },
+  {
+    "true": "Leaf Blast",
+    "pred": "Healthy",
+    "env": "Lab",
+    "pred_conf": 0.701,
+    "true_conf": 0.1187
+  },
+  {
+    "true": "Brown Spot",
+    "pred": "Leaf Blast",
+    "env": "Field",
+    "pred_conf": 0.6925,
+    "true_conf": 0.182
+  },
+  {
+    "true": "Leaf Blast",
+    "pred": "Bacterial Blight",
+    "env": "Field",
+    "pred_conf": 0.6606,
+    "true_conf": 0.1318
+  },
+  {
+    "true": "Brown Spot",
+    "pred": "Leaf Blast",
+    "env": "Lab",
+    "pred_conf": 0.5317,
+    "true_conf": 0.3557
+  },
+  {
+    "true": "Leaf Blast",
+    "pred": "Bacterial Blight",
+    "env": "Field",
+    "pred_conf": 0.5131,
+    "true_conf": 0.1868
+  },
+  {
+    "true": "Brown Spot",
+    "pred": "Healthy",
+    "env": "Lab",
+    "pred_conf": 0.4856,
+    "true_conf": 0.3168
+  },
+  {
+    "true": "Leaf Smut",
+    "pred": "Brown Spot",
+    "env": "Lab",
+    "pred_conf": 0.4627,
+    "true_conf": 0.4356
+  },
+  {
+    "true": "Leaf Blast",
+    "pred": "Brown Spot",
+    "env": "Lab",
+    "pred_conf": 0.4035,
+    "true_conf": 0.3741
+  }
+]

@@ -1,0 +1,38 @@
+{
+  "methods_used": [
+    "Grad-CAM",
+    "Attention Rollout",
+    "SHAP (GradientExplainer)",
+    "LIME"
+  ],
+  "samples_per_class_per_env": 2,
+  "total_samples_explained": 24,
+  "shap_background_size": 48,
+  "lime_num_perturbations": 300,
+  "per_class_correct": {
+    "Bacterial Blight": {
+      "correct": 4,
+      "total": 4
+    },
+    "Brown Spot": {
+      "correct": 4,
+      "total": 4
+    },
+    "Healthy": {
+      "correct": 4,
+      "total": 4
+    },
+    "Leaf Blast": {
+      "correct": 4,
+      "total": 4
+    },
+    "Leaf Smut": {
+      "correct": 4,
+      "total": 4
+    },
+    "Tungro": {
+      "correct": 4,
+      "total": 4
+    }
+  }
+}

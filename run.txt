@@ -1,0 +1,228 @@
+================================================================================
+  RICE PLANT DISEASE CLASSIFICATION — RUN INSTRUCTIONS
+  Model: ViT-Base/16 | Explainable AI (Grad-CAM + Attention Rollout + SHAP + LIME)
+================================================================================
+
+DATASET SUMMARY
+───────────────
+  6 classes: Bacterial Blight, Brown Spot, Healthy, Leaf Blast, Leaf Smut, Tungro
+  2 environments per class: Lab, Field
+  Structure: data/{Train,Valid,Test}/{Class}/{Lab,Field}/*.jpg
+
+  Train counts:
+    Bacterial Blight:  1205  (Lab=834,  Field=371)
+    Brown Spot:         950  (Lab=313,  Field=637)
+    Healthy:           1214  (Lab=1039, Field=175)
+    Leaf Blast:         875  (Lab=175,  Field=700)
+    Leaf Smut:          130  (Lab=53,   Field=77)   ⚠️ SEVERE MINORITY
+    Tungro:             913  (Lab=342,  Field=571)
+
+  Imbalance ratio: 9.3:1 (Healthy:1214 vs Leaf Smut:130)
+  Lab/Field imbalance also varies wildly per class.
+
+IMBALANCE MITIGATION (built into train.py)
+──────────────────────────────────────────
+  • Focal Loss (gamma=2.0) for hard-sample mining
+  • Inverse-frequency weighted loss (Leaf Smut gets ~9× weight)
+  • WeightedRandomSampler for balanced mini-batches
+  • Label smoothing (0.1)
+  • Aggressive augmentation (crop, flip, rotation, color jitter, erasing)
+  • Lower LR (1e-4) with 3-epoch warmup + cosine annealing
+
+EXPLAINABILITY METHODS (built into explain.py)
+──────────────────────────────────────────────
+  • Grad-CAM — gradient-based class activation maps
+  • Attention Rollout — aggregated ViT self-attention across 12 layers
+  • SHAP (GradientExplainer) — Shapley value pixel attribution
+  • LIME (LimeImageExplainer) — perturbation-based superpixel importance
+
+
+================================================================================
+  STEP 0 — ACTIVATE ENVIRONMENT
+================================================================================
+
+source /home/eshwar/.miniconda3/etc/profile.d/conda.sh
+conda activate mlenv
+
+
+================================================================================
+  STEP 1 — DATASET EXPLORATION  (already done, outputs in outputs/exploration/)
+================================================================================
+# Re-run only if you want to regenerate exploration plots:
+
+cd /home/eshwar/plant
+python explore_dataset.py
+
+# Outputs:
+#   outputs/exploration/class_distribution.png
+#   outputs/exploration/lab_vs_field_distribution.png
+#   outputs/exploration/imbalance_analysis.png
+#   outputs/exploration/sample_images_grid.png
+#   outputs/exploration/resolution_distribution.png
+#   outputs/exploration/channel_statistics.png
+#   outputs/exploration/dataset_summary.json
+
+
+================================================================================
+  STEP 2 — TRAINING  (⏱ ~30-60 min on RTX 4060, 50 epochs max, early stop)
+================================================================================
+
+cd /home/eshwar/plant
+python train.py
+
+# Config: LR=1e-4, FocalLoss(gamma=2.0), warmup=3 epochs, patience=12
+# These settings fix the epoch-1 peak issue and improve field performance.
+
+# Outputs:
+#   outputs/training/best_model.pth           — Best model checkpoint
+#   outputs/training/training_history.json     — Full epoch-by-epoch metrics
+#   outputs/training/training_curves.png       — Loss/Acc/F1/LR curves
+#   outputs/training/per_class_f1_history.png  — Per-class F1 across epochs
+#   outputs/training/class_weights_chart.png   — Sample counts vs class weights
+#   outputs/training/training_config.json      — Hyperparameter record
+
+
+================================================================================
+  STEP 3 — EVALUATION
+================================================================================
+
+cd /home/eshwar/plant
+python evaluate.py
+
+# Outputs:
+#   outputs/evaluation/confusion_matrix.png         — Raw + Normalized CM
+#   outputs/evaluation/env_confusion_matrices.png   — Separate Lab vs Field CMs
+#   outputs/evaluation/per_class_metrics.png         — P/R/F1 bar chart per class
+#   outputs/evaluation/roc_curves.png                — One-vs-Rest ROC (6 classes)
+#   outputs/evaluation/precision_recall_curves.png   — PR curves (imbalance-aware)
+#   outputs/evaluation/lab_vs_field_accuracy.png     — Environment performance heatmaps
+#   outputs/evaluation/confidence_distribution.png   — Correct vs Incorrect confidence
+#   outputs/evaluation/classification_report.csv     — Full sklearn report
+#   outputs/evaluation/evaluation_results.json       — All metrics in JSON
+
+
+================================================================================
+  STEP 4 — EXPLAINABILITY (XAI) — 4 Methods
+================================================================================
+
+cd /home/eshwar/plant
+python explain.py
+
+# Outputs:
+#   outputs/explainability/gradcam_grid_all_classes.png   — Grad-CAM grid (Lab vs Field × 6 classes)
+#   outputs/explainability/attention_rollout_grid.png     — Attention rollout grid
+#   outputs/explainability/shap_grid_all_classes.png      — SHAP heatmap grid (Lab vs Field × 6 classes)
+#   outputs/explainability/lime_grid_all_classes.png      — LIME explanation grid (Lab vs Field × 6 classes)
+#   outputs/explainability/xai_4method_comparison.png     — 4-method side-by-side comparison
+#   outputs/explainability/xai_comparison_grid.png        — Grad-CAM vs Attention comparison
+#   outputs/explainability/xai_method_summary.png         — Method agreement & correlation analysis
+#   outputs/explainability/misclassified_explanations.png — Dual Grad-CAM on misclassified samples
+#   outputs/explainability/attention_statistics.png       — Activation + SHAP statistics
+#   outputs/explainability/gradcam_individual/            — Individual heatmaps per image
+#   outputs/explainability/individual/                    — Detailed panels per class
+#   outputs/explainability/misclassified_summary.json     — Error breakdown JSON
+#   outputs/explainability/xai_summary.json               — XAI run metadata
+
+
+================================================================================
+  RUN ALL AT ONCE (optional)
+================================================================================
+
+cd /home/eshwar/plant
+python run_all.py
+
+# This runs: explore → train → evaluate → explain sequentially.
+
+
+================================================================================
+  QUICK START (skip exploration + use existing/new model)
+================================================================================
+# If you already have a trained model and just want evaluation + XAI:
+
+source /home/eshwar/.miniconda3/etc/profile.d/conda.sh
+conda activate mlenv
+cd /home/eshwar/plant
+python evaluate.py && python explain.py
+
+
+================================================================================
+  FULL PIPELINE FROM SCRATCH
+================================================================================
+
+source /home/eshwar/.miniconda3/etc/profile.d/conda.sh
+conda activate mlenv
+cd /home/eshwar/plant
+python explore_dataset.py
+python train.py
+python evaluate.py
+python explain.py
+
+
+================================================================================
+  INSTALLED PACKAGES (verified in mlenv)
+================================================================================
+  PyTorch:           2.5.1+cu121
+  CUDA:              Yes (RTX 4060 Laptop, 8 GB VRAM)
+  timm:              1.0.9
+  scikit-learn:      1.6.1
+  OpenCV:            4.13.0
+  seaborn:           0.13.2
+  pandas:            2.2.3
+  pytorch-grad-cam:  installed
+  matplotlib:        installed
+  Pillow:            installed
+  shap:              0.49.1
+  lime:              0.2.0.1
+
+
+================================================================================
+  OUTPUT DIRECTORY STRUCTURE (after full pipeline)
+================================================================================
+
+  outputs/
+  ├── exploration/
+  │   ├── class_distribution.png
+  │   ├── lab_vs_field_distribution.png
+  │   ├── imbalance_analysis.png
+  │   ├── sample_images_grid.png
+  │   ├── resolution_distribution.png
+  │   ├── channel_statistics.png
+  │   └── dataset_summary.json
+  │
+  ├── training/
+  │   ├── best_model.pth
+  │   ├── training_history.json
+  │   ├── training_curves.png
+  │   ├── per_class_f1_history.png
+  │   ├── class_weights_chart.png
+  │   └── training_config.json
+  │
+  ├── evaluation/
+  │   ├── confusion_matrix.png
+  │   ├── env_confusion_matrices.png
+  │   ├── per_class_metrics.png
+  │   ├── roc_curves.png
+  │   ├── precision_recall_curves.png
+  │   ├── lab_vs_field_accuracy.png
+  │   ├── confidence_distribution.png
+  │   ├── classification_report.csv
+  │   └── evaluation_results.json
+  │
+  └── explainability/
+      ├── gradcam_grid_all_classes.png     — Grad-CAM (gradient-based)
+      ├── attention_rollout_grid.png       — Attention (transformer layers)
+      ├── shap_grid_all_classes.png        — SHAP (Shapley values)
+      ├── lime_grid_all_classes.png        — LIME (perturbation-based)
+      ├── xai_4method_comparison.png       — 4-method comparison
+      ├── xai_comparison_grid.png          — Grad-CAM vs Attention
+      ├── xai_method_summary.png           — Method agreement analysis
+      ├── misclassified_explanations.png
+      ├── attention_statistics.png
+      ├── xai_summary.json
+      ├── misclassified_summary.json
+      ├── gradcam_individual/
+      │   └── gradcam_{class}_{env}.png  (×12+)
+      └── individual/
+          └── detail_{class}.png  (×6)
+
+================================================================================

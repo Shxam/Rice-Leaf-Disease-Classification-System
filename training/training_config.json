@@ -1,0 +1,43 @@
+{
+  "model": "vit_base_patch16_224",
+  "img_size": 224,
+  "batch_size": 32,
+  "accum_steps": 2,
+  "effective_batch": 64,
+  "epochs_trained": 49,
+  "max_epochs": 50,
+  "lr": 0.0001,
+  "weight_decay": 0.05,
+  "warmup_epochs": 3,
+  "patience": 12,
+  "seed": 42,
+  "label_smoothing": 0.1,
+  "use_focal_loss": true,
+  "focal_gamma": 2.0,
+  "best_val_f1": 0.985738298645789,
+  "imbalance_ratio": 9.338461538461539,
+  "class_weights": [
+    0.3940315842628479,
+    0.4997979402542114,
+    0.3911104202270508,
+    0.5426377654075623,
+    3.652369737625122,
+    0.5200526118278503
+  ],
+  "train_counts": [
+    1205,
+    950,
+    1214,
+    875,
+    130,
+    913
+  ],
+  "classes": [
+    "Bacterial Blight",
+    "Brown Spot",
+    "Healthy",
+    "Leaf Blast",
+    "Leaf Smut",
+    "Tungro"
+  ]
+}
